@@ -106,7 +106,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-st.markdown('<h1 class="title-glow">Car Price Prediction </h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="title-glow">Car Price Prediction</h1>', unsafe_allow_html=True)
 
 
 brand_options = ["Select a Car Brand"] + list(Cars["brand"].unique())
