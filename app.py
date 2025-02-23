@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 
-model = pickle.load(open('Model.pkl','rb'))
+model = pickle.load(open('model.pkl','rb'))
 
 Cars = pd.read_csv('Cars_datasets.csv')
 def get_brand_name(cars_data):
@@ -86,7 +86,7 @@ st.markdown("""
         .title-glow {
             font-size: 45px;
             font-weight: bold;
-            color: white;
+            color: black;
             text-align: center;
             padding: 10px;
             border-radius: 10px;
@@ -170,7 +170,7 @@ def add_glow_effect():
 
 add_glow_effect()
 
-st.markdown('<p class="glow-text">Car Manufactured Year:</p>', unsafe_allow_html=True)
+st.markdown('<p class="glow-text">Car Manufactured Year (1994 - 2024):</p>', unsafe_allow_html=True)
 
 selected_year = st.number_input("", min_value=1994, max_value=2024, value=2015, step=1, key="year_select", label_visibility="collapsed")
 
@@ -207,7 +207,7 @@ def add_glow_effect():
 
 add_glow_effect()
 
-st.markdown('<p class="glow-text">Number of kms Driven:</p>', unsafe_allow_html=True)
+st.markdown('<p class="glow-text">Number of kms Driven (11 - 200000):</p>', unsafe_allow_html=True)
 
 selected_km = st.number_input("", min_value=11, max_value=200000, value=5000, step=1, key="km_select", label_visibility="collapsed")
 
@@ -324,7 +324,7 @@ def add_glow_effect():
 
 add_glow_effect()
 
-st.markdown('<p class="glow-text">Car Mileage:</p>', unsafe_allow_html=True)
+st.markdown('<p class="glow-text">Car Mileage (10 - 40):</p>', unsafe_allow_html=True)
 
 selected_mileage = st.number_input("", min_value=10, max_value=40, value=10, step=1, key="mileage_select", label_visibility="collapsed")
 
@@ -361,7 +361,7 @@ def add_glow_effect():
 
 add_glow_effect()
 
-st.markdown('<p class="glow-text">Engine CC:</p>', unsafe_allow_html=True)
+st.markdown('<p class="glow-text">Engine CC (700 - 5000):</p>', unsafe_allow_html=True)
 
 selected_CC = st.number_input("", min_value=700, max_value=5000, value=700, step=1, key="CC_select", label_visibility="collapsed")
 
@@ -398,7 +398,7 @@ def add_glow_effect():
 
 add_glow_effect()
 
-st.markdown('<p class="glow-text">Max Power:</p>', unsafe_allow_html=True)
+st.markdown('<p class="glow-text">Max Power (0 - 200):</p>', unsafe_allow_html=True)
 
 selected_power = st.number_input("", min_value=0, max_value=200, value=50, step=1, key="power_select", label_visibility="collapsed")
 
@@ -435,13 +435,12 @@ def add_glow_effect():
 
 add_glow_effect()
 
-st.markdown('<p class="glow-text">No of Seats:</p>', unsafe_allow_html=True)
+st.markdown('<p class="glow-text">No of Seats (5 - 10):</p>', unsafe_allow_html=True)
 
 selected_seats = st.number_input("", min_value=5, max_value=10, value=5, step=1, key="seats_select", label_visibility="collapsed")
 
 st.markdown("""
     <style>
-        /* Glowing button effect */
         div.stButton > button {
             width: 100%;
             font-size: 30px;
@@ -454,15 +453,11 @@ st.markdown("""
             transition: 0.3s;
             box-shadow: 0 0 10px #ff4b4b;
         }
-
-        /* Glow effect on hover */
         div.stButton > button:hover {
             background-color: black;
             border: 3px solid white;
             box-shadow: 0 0 20px white;
         }
-
-        /* Stylish large prediction text */
         .prediction-text {
             font-size: 60px;
             font-weight: bold;
@@ -484,28 +479,32 @@ with col2:
     predict = st.button("Predict Car Price")
 
 if predict:
-    input_data_model = pd.DataFrame(
-        [[selected_brand, selected_year, selected_km, selected_fuel, selected_seller,
-          selected_transmission, selected_owner, selected_mileage, selected_CC, selected_power, selected_seats]],
-        columns=['name', 'year', 'km_driven', 'fuel', 'seller_type', 'transmission',
-                 'owner', 'mileage', 'engine', 'max_power', 'seats']
-    )
+    try:
+        if not selected_brand:
+            st.markdown(f'<p class="prediction-text">Select the car</p>', unsafe_allow_html=True)
+        else:
+            input_data_model = pd.DataFrame([
+                [selected_brand, selected_year, selected_km, selected_fuel, selected_seller,
+                 selected_transmission, selected_owner, selected_mileage, selected_CC, selected_power, selected_seats]
+            ], columns=['name', 'year', 'km_driven', 'fuel', 'seller_type', 'transmission',
+                        'owner', 'mileage', 'engine', 'max_power', 'seats'])
 
-    input_data_model['owner'].replace(
-        ['First Owner', 'Second Owner', 'Third Owner', 'Fourth & Above Owner', 'Test Drive Car'],
-        [1, 2, 3, 4, 5], inplace=True
-    )
-    input_data_model['fuel'].replace(['Diesel', 'Petrol', 'LPG', 'CNG'], [1, 2, 3, 4], inplace=True)
-    input_data_model['seller_type'].replace(['Individual', 'Dealer', 'Trustmark Dealer'], [1, 2, 3], inplace=True)
-    input_data_model['transmission'].replace(['Manual', 'Automatic'], [1, 2], inplace=True)
-    input_data_model['name'].replace({
-        'Maruti': 1, 'Skoda': 2, 'Honda': 3, 'Hyundai': 4, 'Toyota': 5, 'Ford': 6, 'Renault': 7,
-        'Mahindra': 8, 'Tata': 9, 'Chevrolet': 10, 'Datsun': 11, 'Jeep': 12, 'Mercedes-Benz': 13,
-        'Mitsubishi': 14, 'Audi': 15, 'Volkswagen': 16, 'BMW': 17, 'Nissan': 18, 'Lexus': 19,
-        'Jaguar': 20, 'Land': 21, 'MG': 22, 'Volvo': 23, 'Daewoo': 24, 'Kia': 25, 'Fiat': 26,
-        'Force': 27, 'Ambassador': 28, 'Ashok': 29, 'Isuzu': 30, 'Opel': 31
-    }, inplace=True)
+            mappings = {
+                'owner': {'First Owner': 1, 'Second Owner': 2, 'Third Owner': 3, 'Fourth & Above Owner': 4, 'Test Drive Car': 5},
+                'fuel': {'Diesel': 1, 'Petrol': 2, 'LPG': 3, 'CNG': 4},
+                'seller_type': {'Individual': 1, 'Dealer': 2, 'Trustmark Dealer': 3},
+                'transmission': {'Manual': 1, 'Automatic': 2},
+                'name': {brand: idx+1 for idx, brand in enumerate([
+                    'Maruti', 'Skoda', 'Honda', 'Hyundai', 'Toyota', 'Ford', 'Renault', 'Mahindra',
+                    'Tata', 'Chevrolet', 'Datsun', 'Jeep', 'Mercedes-Benz', 'Mitsubishi', 'Audi',
+                    'Volkswagen', 'BMW', 'Nissan', 'Lexus', 'Jaguar', 'Land', 'MG', 'Volvo',
+                    'Daewoo', 'Kia', 'Fiat', 'Force', 'Ambassador', 'Ashok', 'Isuzu', 'Opel'])}
+            }
 
-    Car_price = model.predict(input_data_model)
+            for col, mapping in mappings.items():
+                input_data_model[col].replace(mapping, inplace=True)
 
-    st.markdown(f'<p class="prediction-text">Estimated Car Price: ₹ {Car_price[0]:,.2f}</p>', unsafe_allow_html=True)
+            Car_price = model.predict(input_data_model)
+            st.markdown(f'<p class="prediction-text">Estimated Car Price: ₹ {Car_price[0]:,.2f}</p>', unsafe_allow_html=True)
+    except Exception as e:
+        st.markdown(f'<p class="prediction-text">Please Select The Car To Predict Price</p>', unsafe_allow_html=True)
