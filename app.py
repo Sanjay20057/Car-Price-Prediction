@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import pickle
 
-model = pickle.load(open('model.pkl','rb'))
+model = pickle.load(open('Model.pkl','rb'))
 
 Cars = pd.read_csv('Cars_datasets.csv')
 def get_brand_name(cars_data):
